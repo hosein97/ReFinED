@@ -22,7 +22,7 @@ from refined.training.train.training_args import parse_training_args
 from refined.utilities.general_utils import get_logger
 
 LOG = get_logger(name=__name__)
-
+ 
 
 def main():
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -52,7 +52,7 @@ def main():
         entity_set=training_args.entity_set,
         use_precomputed_description_embeddings=False
     )
-
+    print('here')
     wikidata_mapper = WikidataMapper(resource_manager=resource_manager)
 
     wikipedia_dataset_file_path = resource_manager.get_training_data_files()['wikipedia_training_dataset']
