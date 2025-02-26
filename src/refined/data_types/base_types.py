@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 from typing import Optional, List, Tuple, Set
+from dataclasses import fields
 
 
 @dataclass
@@ -114,3 +115,8 @@ class Span:
 
     # def __repr__(self) -> str:
     #     return str([self.text, self.predicted_entity, self.coarse_mention_type])
+
+
+    def __repr__(self) -> str:
+        field_values = {f.name: getattr(self, f.name) for f in fields(self)}
+        return f"{self.__class__.__name__}({', '.join(f'{k}={v}' for k, v in field_values.items())})"
