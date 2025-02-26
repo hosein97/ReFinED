@@ -71,11 +71,11 @@ class Entity:
         if self.wikidata_entity_id == 'Q-1':
             self.wikidata_entity_id = None
 
-    def __repr__(self):
-        if len([v for v in vars(self).values() if v is not None]) > 0:
-            return 'Entity(' + ', '.join([f'{var}={val}' for var, val in vars(self).items() if val is not None]) + ')'
-        else:
-            return 'Entity not linked to a knowledge base'
+    # def __repr__(self):
+    #     if len([v for v in vars(self).values() if v is not None]) > 0:
+    #         return 'Entity(' + ', '.join([f'{var}={val}' for var, val in vars(self).items() if val is not None]) + ')'
+    #     else:
+    #         return 'Entity not linked to a knowledge base'
 
 
 @dataclass
@@ -117,6 +117,6 @@ class Span:
     #     return str([self.text, self.predicted_entity, self.coarse_mention_type])
 
 
-    def __repr__(self) -> str:
-        field_values = {f.name: getattr(self, f.name) for f in fields(self)}
-        return f"{self.__class__.__name__}({', '.join(f'{k}={v}' for k, v in field_values.items())})"
+    # def __repr__(self) -> str:
+    #     field_values = {f.name: getattr(self, f.name) for f in fields(self)}
+    #     return f"{self.__class__.__name__}({', '.join(f'{k}={v}' for k, v in field_values.items())})"
