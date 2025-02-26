@@ -52,7 +52,8 @@ def main():
         entity_set=training_args.entity_set,
         use_precomputed_description_embeddings=False
     )
-    print('here')
+    LOG.info(f'here')
+
     wikidata_mapper = WikidataMapper(resource_manager=resource_manager)
 
     wikipedia_dataset_file_path = resource_manager.get_training_data_files()['wikipedia_training_dataset']
