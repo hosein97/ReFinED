@@ -140,7 +140,6 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
                 ents = parsed_line["hyperlinks_clean"]
                 text = parsed_line["text"]
                 spans: List[Span] = []
-                print(f"ents: {ents}")
                 for ent in ents:
                     qcode = ent["qcode"]
                     ln = ent["end"] - ent["start"]

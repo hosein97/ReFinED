@@ -112,5 +112,5 @@ class Span:
     # can be used to filter candidates to a given set (optional)
     pruned_candidates: Optional[Set[str]] = None
 
-    def __repr__(self) -> str:
-        return str([self.text, self.predicted_entity, self.coarse_mention_type])
+    # def __repr__(self) -> str:
+    #     return str([self.text, self.predicted_entity, self.coarse_mention_type])
