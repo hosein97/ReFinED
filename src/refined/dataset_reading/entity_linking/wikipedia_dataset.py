@@ -115,6 +115,8 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
         with open(self.dataset_path, "r") as dataset_file:
             batch_elements = []
             for current_line_num, dataset_line in enumerate(dataset_file):            
+                if current_line_num > 10: 
+                    raise Exception("Interupt!")
                 self.log.info(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
                 print(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
                 
