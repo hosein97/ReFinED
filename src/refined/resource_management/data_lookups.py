@@ -14,7 +14,7 @@ from refined.resource_management.loaders import load_human_qcode
 import os
 
 
-class LookupsInferenceOnly:
+class LookupsInferenceOnly: 
 
     def __init__(self, entity_set: str, data_dir: str, use_precomputed_description_embeddings: bool = True,
                  return_titles: bool = False):
@@ -79,7 +79,7 @@ class LookupsInferenceOnly:
         # can be shared
         self.tokenizers: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
             os.path.dirname(resource_to_file_path["roberta_base_model"]),
-            add_special_tokens=False,
+            # add_special_tokens=False,
             add_prefix_space=False,
             use_fast=True,
         )
