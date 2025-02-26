@@ -52,7 +52,6 @@ def main():
         entity_set=training_args.entity_set,
         use_precomputed_description_embeddings=False
     )
-    LOG.info(f'here')
 
     wikidata_mapper = WikidataMapper(resource_manager=resource_manager)
 

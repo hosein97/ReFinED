@@ -117,7 +117,6 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
             for current_line_num, dataset_line in enumerate(dataset_file):            
                 if current_line_num > 10: 
                     raise Exception("Interupt!")
-                self.log.info(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
                 print(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
                 
                 if current_line_num > self.end:
@@ -155,7 +154,7 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
                         )
                     )
 
-                self.log.info(f"spans: {spans}")
+                print(f"spans: {spans}")
                 assert "predicted_spans" in parsed_line, "predicted spans field is needed to effectively train " \
                                                          "the mention detection layer because hyperlinks " \
                                                          "are only partial."
@@ -169,21 +168,21 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
                 else:
                     md_spans = None
 
-                self.log.info(f"md_spans: {md_spans}")
+                print(f"md_spans: {md_spans}")
                 # add main entities
                 if self.add_main_entity:
                     spans = self.merge_in_main_entity_mentions(
                         title=parsed_line["title"], spans=spans, md_spans=md_spans
                     )
 
-                self.log.info(f"merged spans: {spans}")
+                print(f"merged spans: {spans}")
 
                 # TODO pass through candidate_dropout
                 doc = Doc.from_text_with_spans(text, spans, self.preprocessor,
                                                lower_case_prob=self.lower_case_prob, md_spans=md_spans,
                                                sample_k_candidates=self.sample_k_candidates)
                 
-                self.log.info(f"doc: {doc}")
+                print(f"doc: {doc}")
 
                 if self.return_docs:
                     # note that this will not prefetch docs
@@ -197,7 +196,7 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
                     doc_batch_elements = doc.to_batch_elements(
                         max_mentions=self.max_mentions, preprocessor=self.preprocessor
                     )
-                    self.log.info(f"doc_batch_elements: {doc_batch_elements}")
+                    print(f"doc_batch_elements: {doc_batch_elements}")
                     if self.mask > 0.0:
                         doc_batch_elements = map(
                             lambda x: mask_mentions(
@@ -209,7 +208,7 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
                             ),
                             doc_batch_elements,
                         )
-                        self.log.info(f"mapped doc_batch_elements: {doc_batch_elements}")
+                        print(f"mapped doc_batch_elements: {doc_batch_elements}")
                     batch_elements.extend(doc_batch_elements)
                     del parsed_line, ents, text
                     if len(batch_elements) > self.prefetch:
