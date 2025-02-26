@@ -127,14 +127,14 @@ def get_tokenizer(
         tokenizer = AutoTokenizer.from_pretrained(
             os.path.join(data_dir, transformer_name),
             use_fast=use_fast,
-            add_special_tokens=add_special_tokens,
+            # add_special_tokens=add_special_tokens,
             add_prefix_space=add_prefix_space
         )
     else:
         tokenizer = AutoTokenizer.from_pretrained(
             transformer_name,
             use_fast=use_fast,
-            add_special_tokens=add_special_tokens,
+            # add_special_tokens=add_special_tokens,
             add_prefix_space=add_prefix_space,
         )
 
