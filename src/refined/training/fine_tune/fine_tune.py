@@ -97,7 +97,7 @@ def start_fine_tuning_task(refined: 'Refined', train_docs: Iterable[Doc],
                           scheduler=scheduler, evaluation_dataset_name_to_docs=evaluation_dataset_name_to_docs,
                           checkpoint_every_n_steps=fine_tuning_args.checkpoint_every_n_steps)
 
-
+ 
 def run_fine_tuning_loops(refined: Refined, fine_tuning_args: TrainingArgs, training_dataloader: DataLoader,
                           optimizer: AdamW, scheduler, evaluation_dataset_name_to_docs: Dict[str, Iterable[Doc]],
                           checkpoint_every_n_steps: int = 1000000, scaler: GradScaler = GradScaler()):
@@ -111,6 +111,7 @@ def run_fine_tuning_loops(refined: Refined, fine_tuning_args: TrainingArgs, trai
         for param_group in optimizer.param_groups:
             LOG.info(f"lr: {param_group['lr']}")
         total_loss = 0.0
+
         for step, batch in tqdm(enumerate(training_dataloader), total=len(training_dataloader)):
             batch = batch.to(fine_tuning_args.device)
             with autocast():

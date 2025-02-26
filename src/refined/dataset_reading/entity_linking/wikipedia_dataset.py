@@ -116,6 +116,8 @@ class WikipediaDataset(torch.utils.data.IterableDataset):
             batch_elements = []
             for current_line_num, dataset_line in enumerate(dataset_file):            
                 self.log.info(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
+                print(f'current_line_number: {current_line_num}, dataset_line: {dataset_line}')
+                
                 if current_line_num > self.end:
                     return
                 if not (self.start <= current_line_num <= self.end):
