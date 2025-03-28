@@ -113,6 +113,7 @@ def run_fine_tuning_loops(refined: Refined, fine_tuning_args: TrainingArgs, trai
         total_loss = 0.0
 
         for step, batch in tqdm(enumerate(training_dataloader), total=len(training_dataloader)):
+            print(step)
             batch = batch.to(fine_tuning_args.device)
             with autocast():
                 output = model(batch=batch)
