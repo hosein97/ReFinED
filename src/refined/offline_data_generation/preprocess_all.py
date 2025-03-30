@@ -30,7 +30,7 @@ from refined.offline_data_generation.run_span_detection import run, add_spans_to
 from refined.resource_management.aws import S3Manager
 from refined.resource_management.loaders import load_pem, load_labels, load_instance_of
 from refined.resource_management.resource_manager import ResourceManager
-from refined.training.train.train_md_standalone import train_md_model
+# from refined.training.train.train_md_standalone import train_md_model
 from refined.utilities.general_utils import get_logger
 
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
