@@ -8,6 +8,7 @@ from types import SimpleNamespace
 
 
 def extract_useful_info(entity):
+    print(entity)
     qcode = entity['id']
     if 'en' in entity['labels']:
         entity_en_label = entity['labels']['en']['value']
