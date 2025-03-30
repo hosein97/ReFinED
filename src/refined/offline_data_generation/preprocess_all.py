@@ -56,11 +56,15 @@ WIKIDATA_DUMP_URL = 'https://dumps.wikimedia.org/wikidatawiki/entities/latest-al
 WIKIDATA_DUMP_FILE = 'wikidata.json.bz2'
 
 # Wikipedia configuration
-WIKIPEDIA_REDIRECTS_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-redirect.sql.gz'
+# WIKIPEDIA_REDIRECTS_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-redirect.sql.gz'
+WIKIPEDIA_REDIRECTS_URL = 'https://dumps.wikimedia.org/fawiki/latest/fawiki-latest-redirect.sql.gz'
 WIKIPEDIA_REDIRECTS_FILE = 'wikipedia_redirects.sql.gz'
-WIKIPEDIA_PAGE_IDS_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-page.sql.gz'
+# WIKIPEDIA_PAGE_IDS_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-page.sql.gz'
+WIKIPEDIA_PAGE_IDS_URL = 'https://dumps.wikimedia.org/fawiki/latest/fawiki-latest-page.sql.gz'
 WIKIPEDIA_PAGE_IDS_FILE = 'wikipedia_page_ids.sql.gz'
-WIKIPEDIA_ARTICLES_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2'
+# WIKIPEDIA_ARTICLES_URL = 'https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2'
+WIKIPEDIA_ARTICLES_URL = 'https://dumps.wikimedia.org/fawiki/latest/fawiki-latest-pages-articles.xml.bz2'
+
 WIKIPEDIA_ARTICLES_FILE = 'wikipedia_articles.xml.bz2'
 AIDA_MEANS_URL = 'http://resources.mpi-inf.mpg.de/yago-naga/aida/download/aida_means.tsv.bz2'
 AIDA_MEANS_FILE = 'aida_means.tsv.bz2'
@@ -251,89 +255,91 @@ def main():
     if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_label.json')):
         build_class_labels(OUTPUT_PATH)
 
-    LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
-    # check if model exists
-    model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
-    if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
-        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-        os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-        resource_manager = ResourceManager(S3Manager(),
-                                           data_dir=OUTPUT_PATH,
-                                           entity_set=None,
-                                           model_name=None
-                                           )
-        resource_manager.download_datasets_if_needed()
-        NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
-        del NER_TAG_TO_NUM_MD["B-MENTION"]
-        del NER_TAG_TO_NUM_MD["I-MENTION"]
-        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
-                       device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
-    else:
-        LOG.info('Model already trained so skipping')
+    # LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
+    # # check if model exists
+    # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
+    # if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
+    #     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    #     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    #     resource_manager = ResourceManager(S3Manager(),
+    #                                        data_dir=OUTPUT_PATH,
+    #                                        entity_set=None,
+    #                                        model_name=None
+    #                                        )
+    #     resource_manager.download_datasets_if_needed()
+    #     NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
+    #     del NER_TAG_TO_NUM_MD["B-MENTION"]
+    #     del NER_TAG_TO_NUM_MD["I-MENTION"]
+    #     train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
+    #                    device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
+    #                    ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
+    # else:
+    #     LOG.info('Model already trained so skipping')
 
-    LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):
-        model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]  # or -1
-        add_spans_to_existing_datasets(dataset_names=["conll"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
-                                       model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
-                                                                                                            "CARDINAL",
-                                                                                                            "MONEY",
-                                                                                                            "PERCENT",
-                                                                                                            "TIME",
-                                                                                                            "ORDINAL",
-                                                                                                            "QUANTITY"},
-                                       device="cuda:0")
-    else:
-        LOG.info('Already relabelled CONLL dataset so skipping')
+    # LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):
+    #     model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]  # or -1
+    #     add_spans_to_existing_datasets(dataset_names=["conll"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
+    #                                    model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
+    #                                                                                                         "CARDINAL",
+    #                                                                                                         "MONEY",
+    #                                                                                                         "PERCENT",
+    #                                                                                                         "TIME",
+    #                                                                                                         "ORDINAL",
+    #                                                                                                         "QUANTITY"},
+    #                                    device="cuda:0")
+    # else:
+    #     LOG.info('Already relabelled CONLL dataset so skipping')
 
-    LOG.info('Step 13) Train MD model on augmented MD datasets')
-    model_dir_prefix = 'onto-onto-article-onto-lower-onto-article-lower-conll-conll-lower-conll-article-conll-article' \
-                       '-lower-webqsp-epoch-9'
-    if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
-        datasets = ['onto', 'onto-article', 'onto-lower', 'onto-article-lower',
-                    'conll', 'conll-lower', 'conll-article',
-                    'conll-article-lower', 'webqsp']
-        train_md_model(resources_dir=OUTPUT_PATH, datasets=datasets,
-                       device="cuda:0", max_seq=510, batch_size=16, bio_only=False,
-                       ner_tag_to_num=NER_TAG_TO_IX,
-                       additional_filenames={'conll': '_plus_dates', 'conll-lower': '_plus_dates',
-                                             'conll-article': '_plus_dates', 'conll-article-lower': '_plus_dates'},
-                       use_mention_tag=True,
-                       convert_types={"webqsp": {"DURATION": "TIME", "NUMBER": "CARDINAL"}},
-                       filter_types=set())
-    else:
-        LOG.info("Found an MD model already trained on augmented MD datasets, so skipping")
+    # LOG.info('Step 13) Train MD model on augmented MD datasets')
+    # model_dir_prefix = 'onto-onto-article-onto-lower-onto-article-lower-conll-conll-lower-conll-article-conll-article' \
+    #                    '-lower-webqsp-epoch-9'
+    # if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
+    #     datasets = ['onto', 'onto-article', 'onto-lower', 'onto-article-lower',
+    #                 'conll', 'conll-lower', 'conll-article',
+    #                 'conll-article-lower', 'webqsp']
+    #     train_md_model(resources_dir=OUTPUT_PATH, datasets=datasets,
+    #                    device="cuda:0", max_seq=510, batch_size=16, bio_only=False,
+    #                    ner_tag_to_num=NER_TAG_TO_IX,
+    #                    additional_filenames={'conll': '_plus_dates', 'conll-lower': '_plus_dates',
+    #                                          'conll-article': '_plus_dates', 'conll-article-lower': '_plus_dates'},
+    #                    use_mention_tag=True,
+    #                    convert_types={"webqsp": {"DURATION": "TIME", "NUMBER": "CARDINAL"}},
+    #                    filter_types=set())
+    # else:
+    #     LOG.info("Found an MD model already trained on augmented MD datasets, so skipping")
 
-    LOG.info('Step 14) Running MD model over Wikipedia.')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')):
-        model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]
-        n_gpu = 1  # can change this to speed it up if more GPUs are available
-        run(aligned_wiki_file=os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned.json'),
-            n_gpu=n_gpu, resources_dir=OUTPUT_PATH, model_dir=model_dir)
-        command = 'cat '
-        for part_num in range(n_gpu):
-            command += os.path.abspath(
-                os.path.join(OUTPUT_PATH, f'wikipedia_links_aligned.json_spans_{part_num}.json '))
-        f_out = open(os.path.abspath(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')), 'w')
-        process = subprocess.Popen(command.split(), stdout=f_out)
-        output, error = process.communicate()
-        print(error)
-        f_out.close()
+    # LOG.info('Step 14) Running MD model over Wikipedia.')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')):
+    #     model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]
+    #     n_gpu = 1  # can change this to speed it up if more GPUs are available
+    #     run(aligned_wiki_file=os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned.json'),
+    #         n_gpu=n_gpu, resources_dir=OUTPUT_PATH, model_dir=model_dir)
+    #     command = 'cat '
+    #     for part_num in range(n_gpu):
+    #         command += os.path.abspath(
+    #             os.path.join(OUTPUT_PATH, f'wikipedia_links_aligned.json_spans_{part_num}.json '))
+    #     f_out = open(os.path.abspath(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')), 'w')
+    #     process = subprocess.Popen(command.split(), stdout=f_out)
+    #     output, error = process.communicate()
+    #     print(error)
+    #     f_out.close()
 
-    LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
-    build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
+    # LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
+    # build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
 
-    LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
-             "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
-    LOG.info(f"The data_dir is the relative path: {OUTPUT_PATH}/organised_data_dir.")
-    LOG.info(f"You can train a model with the new data using `train.py --download_files n "
-             f"--data_dir {OUTPUT_PATH}/organised_data_dir` . Ensure --download_files n to avoid overwriting.")
-    LOG.info(f"You can use an existing model with the updated data files (e.g. includes recently added entities) "
-             f"without retraining the model (zero-shot entities) by replacing the data files stored in an existing "
-             f"data_dir. Note that qcode_to_class_tns will need to be renamed in the resource_constants file "
-             f"and download should be se to False to avoid downloading a different file.")
-    LOG.info("Done.")
+    # LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
+    #          "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
+    # LOG.info(f"The data_dir is the relative path: {OUTPUT_PATH}/organised_data_dir.")
+    # LOG.info(f"You can train a model with the new data using `train.py --download_files n "
+    #          f"--data_dir {OUTPUT_PATH}/organised_data_dir` . Ensure --download_files n to avoid overwriting.")
+    # LOG.info(f"You can use an existing model with the updated data files (e.g. includes recently added entities) "
+    #          f"without retraining the model (zero-shot entities) by replacing the data files stored in an existing "
+    #          f"data_dir. Note that qcode_to_class_tns will need to be renamed in the resource_constants file "
+    #          f"and download should be se to False to avoid downloading a different file.")
+    # LOG.info("Done.")
+
+    
     # example_usage = """
     # from refined.doc_preprocessing.preprocessor import PreprocessorInferenceOnly
     # from refined.model_components.config import NER_TAG_TO_IX
