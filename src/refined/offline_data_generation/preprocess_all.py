@@ -52,8 +52,7 @@ os.makedirs(OUTPUT_PATH, exist_ok=True)
 # See https://wikimedia.mirror.us.dev/mirrors.html for a list.
 
 # Wikidata configuration
-# WIKIDATA_DUMP_URL = 'https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2'
-WIKIDATA_DUMP_URL = 'https://dumps.wikimedia.org/wikidatawiki/entities/latest-lexemes.json.bz2  '
+WIKIDATA_DUMP_URL = 'https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2'
 WIKIDATA_DUMP_FILE = 'wikidata.json.bz2'
 
 # Wikipedia configuration
