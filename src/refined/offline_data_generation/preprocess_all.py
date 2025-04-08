@@ -43,7 +43,7 @@ LOG = get_logger(__name__)
 # keep_all_entities=False means only keep Wikidata entities that have a Wikipedia page
 keep_all_entities = True
 
-OUTPUT_PATH = 'data'
+OUTPUT_PATH = '/home/jovyan/data'
 
 os.makedirs(OUTPUT_PATH, exist_ok=True)
 
