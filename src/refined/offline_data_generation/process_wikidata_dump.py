@@ -15,7 +15,7 @@ def extract_useful_info(entity):
         entity_en_label = None
     if 'en' in entity['descriptions']:
         entity_en_desc = entity['descriptions']['en']['value']
-    else:
+    else: 
         entity_en_desc = None
     if 'en' in entity['aliases']:
         entity_en_aliases = [alias['value'] for alias in entity['aliases']['en']]
@@ -37,12 +37,25 @@ def extract_useful_info(entity):
         # group by pcode -> [list of qcodes]
         for obj in objs:
             statements_cnt += 1
-            if not obj['mainsnak']['datatype'] == 'wikibase-item' or obj['mainsnak']['snaktype'] == 'somevalue' \
-                    or 'datavalue' not in obj['mainsnak']:
+            # if not obj['mainsnak']['datatype'] == 'wikibase-item' or obj['mainsnak']['snaktype'] == 'somevalue' \
+            #         or 'datavalue' not in obj['mainsnak']:
+            #     continue
+            mainsnak = obj.get('mainsnak', {})
+
+            # skip if not proper format
+            if (
+                mainsnak.get('snaktype') in ['somevalue', 'novalue']
+                or mainsnak.get('datatype') != 'wikibase-item'
+                or 'datavalue' not in mainsnak
+            ):
+                continue            
+            
+            try:
+                if pcode not in triples:
+                    triples[pcode] = []
+                triples[pcode].append(obj['mainsnak']['datavalue']['value']['id'])
+            except (KeyError, TypeError):
                 continue
-            if pcode not in triples:
-                triples[pcode] = []
-            triples[pcode].append(obj['mainsnak']['datavalue']['value']['id'])
     return {'qcode': qcode, 'label': entity_en_label, 'desc': entity_en_desc,
             'aliases': entity_en_aliases, 'sitelinks_cnt': sitelinks_cnt, 'enwiki': enwiki_title,
             'statements_cnt': statements_cnt, 'triples': triples}
