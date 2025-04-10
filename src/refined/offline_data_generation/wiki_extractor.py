@@ -2441,10 +2441,9 @@ ANCHOR_CLASS = r'[^][\x00-\x08\x0a-\x1F]'
 #     r'\s*((?:' + ANCHOR_CLASS + r'|\[\[' + ANCHOR_CLASS + r'+\]\])' + r'*?)\]',
 #     re.S | re.U)
 ExtLinkBracketedRegex = re.compile(
-    r'\[(((' + '|'.join(wgUrlProtocols) + ')' + EXT_LINK_URL_CLASS + r'+)' +
+    '(?i)\[(((' + '|'.join(wgUrlProtocols) + ')' + EXT_LINK_URL_CLASS + r'+)' +
     r'\s*((?:' + ANCHOR_CLASS + r'|\[\[' + ANCHOR_CLASS + r'+\]\])' + r'*?))\]',
-    re.S | re.U | re.I)
-
+    re.S | re.U)
 
 # A simpler alternative:
 # ExtLinkBracketedRegex = re.compile(r'\[(.*?)\](?!])')
