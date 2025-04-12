@@ -325,8 +325,8 @@ def main():
     #     print(error)
     #     f_out.close()
 
-    # LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
-    # build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
+    LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
+    build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
 
     # LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
     #          "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
