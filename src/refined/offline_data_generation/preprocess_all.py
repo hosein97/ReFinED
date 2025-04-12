@@ -270,7 +270,8 @@ def main():
         NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
         del NER_TAG_TO_NUM_MD["B-MENTION"]
         del NER_TAG_TO_NUM_MD["I-MENTION"]
-        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
+        # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
+        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto'],
                        device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
                        ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
     else:
