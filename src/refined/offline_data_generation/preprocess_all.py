@@ -255,26 +255,26 @@ def main():
     if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_label.json')):
         build_class_labels(OUTPUT_PATH)
 
-    # LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
-    # # check if model exists
-    # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
-    # if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
-    #     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    #     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-    #     resource_manager = ResourceManager(S3Manager(),
-    #                                        data_dir=OUTPUT_PATH,
-    #                                        entity_set=None,
-    #                                        model_name=None
-    #                                        )
-    #     resource_manager.download_datasets_if_needed()
-    #     NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
-    #     del NER_TAG_TO_NUM_MD["B-MENTION"]
-    #     del NER_TAG_TO_NUM_MD["I-MENTION"]
-    #     train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
-    #                    device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-    #                    ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
-    # else:
-    #     LOG.info('Model already trained so skipping')
+    LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
+    # check if model exists
+    model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
+    if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+        resource_manager = ResourceManager(S3Manager(),
+                                           data_dir=OUTPUT_PATH,
+                                           entity_set=None,
+                                           model_name=None
+                                           )
+        resource_manager.download_datasets_if_needed()
+        NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
+        del NER_TAG_TO_NUM_MD["B-MENTION"]
+        del NER_TAG_TO_NUM_MD["I-MENTION"]
+        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
+                       device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
+                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
+    else:
+        LOG.info('Model already trained so skipping')
 
     # LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):

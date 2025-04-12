@@ -70,14 +70,14 @@ def train_md_model(
     datasets = list(map(str.lower, datasets))
     name_to_dataset = {
         "onto": OntoNotesNER,
-        "conll": CoNLLNER,
-        "webqsp": WebQSPNER,
-        "conll-article": CoNLLNER,
-        "onto-article": OntoNotesNER,
-        "onto-lower": OntoNotesNER,
-        "onto-article-lower": OntoNotesNER,
-        "conll-lower": CoNLLNER,
-        "conll-article-lower": CoNLLNER
+        # "conll": CoNLLNER,
+        # "webqsp": WebQSPNER,
+        # "conll-article": CoNLLNER,
+        # "onto-article": OntoNotesNER,
+        # "onto-lower": OntoNotesNER,
+        # "onto-article-lower": OntoNotesNER,
+        # "conll-lower": CoNLLNER,
+        # "conll-article-lower": CoNLLNER
     }
 
     train_datasets = {}
