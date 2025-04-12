@@ -30,7 +30,7 @@ from refined.offline_data_generation.run_span_detection import run, add_spans_to
 from refined.resource_management.aws import S3Manager
 from refined.resource_management.loaders import load_pem, load_labels, load_instance_of
 from refined.resource_management.resource_manager import ResourceManager
-# from refined.training.train.train_md_standalone import train_md_model
+from refined.training.train.train_md_standalone import train_md_model
 from refined.utilities.general_utils import get_logger
 
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -325,8 +325,8 @@ def main():
     #     print(error)
     #     f_out.close()
 
-    LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
-    build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
+    # LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
+    # build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
 
     # LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
     #          "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
