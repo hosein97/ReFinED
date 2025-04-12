@@ -10,8 +10,8 @@ from sklearn.metrics import classification_report
 from torch.cuda.amp import GradScaler, autocast
 from torch.utils.data import ConcatDataset, DataLoader
 from tqdm.auto import tqdm, trange
+from torch.optim import AdamW
 from transformers import (
-    AdamW,
     AutoModelForTokenClassification,
     AutoTokenizer,
     get_linear_schedule_with_warmup,
