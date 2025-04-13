@@ -257,7 +257,8 @@ def main():
 
     LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
     # check if model exists
-    model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
+    # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
+    model_dir_prefix = 'onto-epoch'
     if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
