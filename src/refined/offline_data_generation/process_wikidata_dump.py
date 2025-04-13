@@ -9,26 +9,48 @@ from types import SimpleNamespace
 
 def extract_useful_info(entity):
     qcode = entity['id']
-    if 'en' in entity['labels']:
-        entity_en_label = entity['labels']['en']['value']
+    # if 'en' in entity['labels']:
+    #     entity_en_label = entity['labels']['en']['value']
+    # else:
+    #     entity_en_label = None
+    # if 'en' in entity['descriptions']:
+    #     entity_en_desc = entity['descriptions']['en']['value']
+    # else: 
+    #     entity_en_desc = None
+    # if 'en' in entity['aliases']:
+    #     entity_en_aliases = [alias['value'] for alias in entity['aliases']['en']]
+    # else:
+    #     entity_en_aliases = []
+    # if 'sitelinks' in entity:
+    #     sitelinks = entity['sitelinks']
+    # else:
+    #     sitelinks = {}
+    # if 'enwiki' in sitelinks:
+    #     enwiki_title = sitelinks['enwiki']['title']
+    # else:
+    #     enwiki_title = None
+
+    if 'fa' in entity['labels']:
+        entity_en_label = entity['labels']['fa']['value']
     else:
         entity_en_label = None
-    if 'en' in entity['descriptions']:
-        entity_en_desc = entity['descriptions']['en']['value']
+    if 'fa' in entity['descriptions']:
+        entity_en_desc = entity['descriptions']['fa']['value']
     else: 
         entity_en_desc = None
-    if 'en' in entity['aliases']:
-        entity_en_aliases = [alias['value'] for alias in entity['aliases']['en']]
+    if 'fa' in entity['aliases']:
+        entity_en_aliases = [alias['value'] for alias in entity['aliases']['fa']]
     else:
         entity_en_aliases = []
     if 'sitelinks' in entity:
         sitelinks = entity['sitelinks']
     else:
         sitelinks = {}
-    if 'enwiki' in sitelinks:
-        enwiki_title = sitelinks['enwiki']['title']
+    if 'fawiki' in sitelinks:
+        enwiki_title = sitelinks['fawiki']['title']
     else:
         enwiki_title = None
+
 
     sitelinks_cnt = len(sitelinks.items())
     statements_cnt = 0
