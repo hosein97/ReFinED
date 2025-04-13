@@ -273,7 +273,7 @@ def main():
         # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
         train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto'],
                        device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=10, filter_types=set())
+                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set())
     else:
         LOG.info('Model already trained so skipping')
 
