@@ -137,8 +137,17 @@ def load_human_qcode(file_path: str, is_test: bool = False):
 def normalize_surface_form(surface_form: str, remove_the: bool = True):
     surface_form = surface_form.lower()
     surface_form = surface_form[4:] if surface_form[:4] == "the " and remove_the else surface_form
+    # return (
+    #     unidecode(surface_form)
+    #     .replace(".", "")
+    #     .strip(" ")
+    #     .replace('"', "")
+    #     .replace("'s", "")
+    #     .replace("'", "")
+    #     .replace("`", "")
+    # )
     return (
-        unidecode(surface_form)
+        surface_form
         .replace(".", "")
         .strip(" ")
         .replace('"', "")
@@ -146,6 +155,7 @@ def normalize_surface_form(surface_form: str, remove_the: bool = True):
         .replace("'", "")
         .replace("`", "")
     )
+
 
 
 def load_pem(pem_file: str, is_test: bool = False, max_cands: Optional[int] = None):

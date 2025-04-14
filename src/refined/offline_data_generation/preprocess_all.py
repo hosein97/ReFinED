@@ -227,56 +227,56 @@ def main():
                          additional_entities=additional_entities,
                          is_test=debug)
 
-    LOG.info('Step 6) Building entity index from PEM.')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'qcode_to_idx.json')):
-        build_entity_index(os.path.join(OUTPUT_PATH, 'wiki_pem.json'), OUTPUT_PATH)
+    # LOG.info('Step 6) Building entity index from PEM.')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'qcode_to_idx.json')):
+    #     build_entity_index(os.path.join(OUTPUT_PATH, 'wiki_pem.json'), OUTPUT_PATH)
 
-    # build descriptions (include labels without descriptions, maybe some alts as well should keep it short)
-    LOG.info('Step 7) Building descriptions tensor.')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'descriptions_tns.pt')):
-        create_description_tensor(output_path=OUTPUT_PATH,
-                                  qcode_to_idx_filename=os.path.join(OUTPUT_PATH, 'qcode_to_idx.json'),
-                                  desc_filename=os.path.join(OUTPUT_PATH, 'desc.json'),
-                                  label_filename=os.path.join(OUTPUT_PATH, 'qcode_to_label.json'),
-                                  wiki_to_qcode=os.path.join(OUTPUT_PATH, 'enwiki.json'),
-                                  additional_entities=additional_entities,
-                                  keep_all_entities=keep_all_entities,
-                                  is_test=debug)
+    # # build descriptions (include labels without descriptions, maybe some alts as well should keep it short)
+    # LOG.info('Step 7) Building descriptions tensor.')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'descriptions_tns.pt')):
+    #     create_description_tensor(output_path=OUTPUT_PATH,
+    #                               qcode_to_idx_filename=os.path.join(OUTPUT_PATH, 'qcode_to_idx.json'),
+    #                               desc_filename=os.path.join(OUTPUT_PATH, 'desc.json'),
+    #                               label_filename=os.path.join(OUTPUT_PATH, 'qcode_to_label.json'),
+    #                               wiki_to_qcode=os.path.join(OUTPUT_PATH, 'enwiki.json'),
+    #                               additional_entities=additional_entities,
+    #                               keep_all_entities=keep_all_entities,
+    #                               is_test=debug)
 
-    LOG.info('Step 8) Selecting classes tensor.')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'chosen_classes.txt')):
-        select_classes(resources_dir=OUTPUT_PATH, is_test=debug)
+    # LOG.info('Step 8) Selecting classes tensor.')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'chosen_classes.txt')):
+    #     select_classes(resources_dir=OUTPUT_PATH, is_test=debug)
 
-    LOG.info('Step 9) Creating tensors.')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_idx.json')):
-        create_tensors(resources_dir=OUTPUT_PATH, additional_entities=additional_entities, is_test=debug)
+    # LOG.info('Step 9) Creating tensors.')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_idx.json')):
+    #     create_tensors(resources_dir=OUTPUT_PATH, additional_entities=additional_entities, is_test=debug)
 
-    LOG.info('Step 10) Creating class labels lookup')
-    if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_label.json')):
-        build_class_labels(OUTPUT_PATH)
+    # LOG.info('Step 10) Creating class labels lookup')
+    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_label.json')):
+    #     build_class_labels(OUTPUT_PATH)
 
-    LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
-    # check if model exists
-    # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
-    model_dir_prefix = 'onto-epoch'
-    if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
-        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-        os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-        resource_manager = ResourceManager(S3Manager(),
-                                           data_dir=OUTPUT_PATH,
-                                           entity_set=None,
-                                           model_name=None
-                                           )
-        resource_manager.download_datasets_if_needed()
-        NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
-        del NER_TAG_TO_NUM_MD["B-MENTION"]
-        del NER_TAG_TO_NUM_MD["I-MENTION"]
-        # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
-        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto'],
-                       device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set())
-    else:
-        LOG.info('Model already trained so skipping')
+    # LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
+    # # check if model exists
+    # # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
+    # model_dir_prefix = 'onto-epoch'
+    # if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
+    #     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    #     os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    #     resource_manager = ResourceManager(S3Manager(),
+    #                                        data_dir=OUTPUT_PATH,
+    #                                        entity_set=None,
+    #                                        model_name=None
+    #                                        )
+    #     resource_manager.download_datasets_if_needed()
+    #     NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
+    #     del NER_TAG_TO_NUM_MD["B-MENTION"]
+    #     del NER_TAG_TO_NUM_MD["I-MENTION"]
+    #     # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
+    #     train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto'],
+    #                    device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
+    #                    ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set())
+    # else:
+    #     LOG.info('Model already trained so skipping')
 
     # LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):
