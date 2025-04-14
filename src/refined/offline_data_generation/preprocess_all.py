@@ -227,21 +227,22 @@ def main():
                          additional_entities=additional_entities,
                          is_test=debug)
 
-    # LOG.info('Step 6) Building entity index from PEM.')
-    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'qcode_to_idx.json')):
-    #     build_entity_index(os.path.join(OUTPUT_PATH, 'wiki_pem.json'), OUTPUT_PATH)
+    LOG.info('Step 6) Building entity index from PEM.')
+    if not os.path.exists(os.path.join(OUTPUT_PATH, 'qcode_to_idx.json')):
+        build_entity_index(os.path.join(OUTPUT_PATH, 'wiki_pem.json'), OUTPUT_PATH)
 
-    # # build descriptions (include labels without descriptions, maybe some alts as well should keep it short)
-    # LOG.info('Step 7) Building descriptions tensor.')
-    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'descriptions_tns.pt')):
-    #     create_description_tensor(output_path=OUTPUT_PATH,
-    #                               qcode_to_idx_filename=os.path.join(OUTPUT_PATH, 'qcode_to_idx.json'),
-    #                               desc_filename=os.path.join(OUTPUT_PATH, 'desc.json'),
-    #                               label_filename=os.path.join(OUTPUT_PATH, 'qcode_to_label.json'),
-    #                               wiki_to_qcode=os.path.join(OUTPUT_PATH, 'enwiki.json'),
-    #                               additional_entities=additional_entities,
-    #                               keep_all_entities=keep_all_entities,
-    #                               is_test=debug)
+    # build descriptions (include labels without descriptions, maybe some alts as well should keep it short)
+    LOG.info('Step 7) Building descriptions tensor.')
+    if not os.path.exists(os.path.join(OUTPUT_PATH, 'descriptions_tns.pt')):
+        create_description_tensor(output_path=OUTPUT_PATH,
+                                  qcode_to_idx_filename=os.path.join(OUTPUT_PATH, 'qcode_to_idx.json'),
+                                  desc_filename=os.path.join(OUTPUT_PATH, 'desc.json'),
+                                  label_filename=os.path.join(OUTPUT_PATH, 'qcode_to_label.json'),
+                                  wiki_to_qcode=os.path.join(OUTPUT_PATH, 'enwiki.json'),
+                                  additional_entities=additional_entities,
+                                  keep_all_entities=keep_all_entities,
+                                  is_test=debug,
+                                  tokeniser='HooshvareLab/bert-base-parsbert-uncased')
 
     # LOG.info('Step 8) Selecting classes tensor.')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, 'chosen_classes.txt')):
