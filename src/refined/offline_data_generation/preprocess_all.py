@@ -244,9 +244,9 @@ def main():
                                   is_test=debug,
                                   tokeniser='HooshvareLab/bert-base-parsbert-uncased')
 
-    # LOG.info('Step 8) Selecting classes tensor.')
-    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'chosen_classes.txt')):
-    #     select_classes(resources_dir=OUTPUT_PATH, is_test=debug)
+    LOG.info('Step 8) Selecting classes tensor.')
+    if not os.path.exists(os.path.join(OUTPUT_PATH, 'chosen_classes.txt')):
+        select_classes(resources_dir=OUTPUT_PATH, add_class_every_n_pages=20000, is_test=debug)
 
     # LOG.info('Step 9) Creating tensors.')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, 'class_to_idx.json')):
