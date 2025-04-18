@@ -49,31 +49,31 @@ def tokenize_and_preserve_labels(words, text_labels, tokenizer):
         if word_idx == 0:
             clean_words.append(word)
             continue
-        if word == "," and word_idx + 2 < len(words) and words[word_idx + 1] == '"':
-            indices_to_filter.add(word_idx)
-        next_prev_token = None
-        add_prefix_space = True
-        if word in '"':
-            double_quote_count += 1
-            if double_quote_count % 2 == 0:
-                add_prefix_space = False
-                next_prev_token = '"END'
+        # if word == "," and word_idx + 2 < len(words) and words[word_idx + 1] == '"':
+        #     indices_to_filter.add(word_idx)
+        # next_prev_token = None
+        # add_prefix_space = True
+        # if word in '"':
+        #     double_quote_count += 1
+        #     if double_quote_count % 2 == 0:
+        #         add_prefix_space = False
+        #         next_prev_token = '"END'
 
-        if word in no_prefix_space_tokens:
-            add_prefix_space = False
+        # if word in no_prefix_space_tokens:
+        #     add_prefix_space = False
 
-        if word == "s" and prev_was_quote:
-            add_prefix_space = False
+        # if word == "s" and prev_was_quote:
+        #     add_prefix_space = False
 
-        if prev_token in {'"', "(", "[", "$", "£", "/"}:
-            add_prefix_space = False
+        # if prev_token in {'"', "(", "[", "$", "£", "/"}:
+        #     add_prefix_space = False
 
-        if next_prev_token is not None:
-            prev_token = next_prev_token
-        else:
-            prev_token = word
-        word = " " + word if add_prefix_space else word
-        prev_was_quote = word in {"'"}
+        # if next_prev_token is not None:
+        #     prev_token = next_prev_token
+        # else:
+        #     prev_token = word
+        # word = " " + word if add_prefix_space else word
+        # prev_was_quote = word in {"'"}
         clean_words.append(word)
 
     assert len(clean_words) == len(
