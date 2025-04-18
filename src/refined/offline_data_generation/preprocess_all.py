@@ -259,7 +259,8 @@ def main():
     LOG.info('(Step 11) Training MD model for ontonotes numeric/date spans (date, cardinal, percent etc.)')
     # check if model exists
     # model_dir_prefix = 'onto-onto-article-onto-lower-epoch-4'
-    model_dir_prefix = 'onto-epoch'
+    # model_dir_prefix = 'onto-epoch'
+    model_dir_prefix = 'peyma'
     if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO)
         os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
@@ -269,13 +270,54 @@ def main():
                                            model_name=None
                                            )
         resource_manager.download_datasets_if_needed()
+
+        # Download peyma
+        import os
+        import requests
+        import zipfile
+        import glob
+        import shutil
+
+        DATASET_DIR = os.path.join(OUTPUT_PATH, "datasets")
+        os.makedirs(DATASET_DIR, exist_ok=True)
+        zip_url = "https://drive.google.com/uc?id=1WZxpFRtEs5HZWyWQ2Pyg9CCuIBs1Kmvx&export=download"
+        zip_path = os.path.join(DATASET_DIR, "peyma.zip")
+        response = requests.get(zip_url)
+        with open(zip_path, "wb") as f:
+            f.write(response.content)
+
+        extract_dir = os.path.join(DATASET_DIR, "peyma_extracted")
+        os.makedirs(extract_dir, exist_ok=True)
+
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(extract_dir)
+
+        extracted_subdir = glob.glob(os.path.join(extract_dir, "*"))[0]  # Assumes one subfolder inside
+        file_map = {
+            "train.txt": "peyma_training.txt",
+            "dev.txt": "peyma_development.txt",
+            "test.txt": "peyma_test.txt",
+        }
+
+        for original_name, new_name in file_map.items():
+            src = os.path.join(extracted_subdir, original_name)
+            dst = os.path.join(DATASET_DIR, new_name)
+            shutil.move(src, dst)
+
+        shutil.rmtree(extract_dir)
+        os.remove(zip_path)
+
+
+
+
         NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
         del NER_TAG_TO_NUM_MD["B-MENTION"]
         del NER_TAG_TO_NUM_MD["I-MENTION"]
         # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
-        train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto'], transformer_name="HooshvareLab/bert-base-parsbert-uncased",
+        train_md_model(resources_dir=OUTPUT_PATH, datasets=['peyma'], transformer_name="HooshvareLab/bert-base-parsbert-uncased",
                        device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set())
+                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set(),
+                       convert_types={"peyma": {"DAT": "DATE", "PCT": "PERCENT", "TIM":"TIME", "MON": "MONEY"}},)
     else:
         LOG.info('Model already trained so skipping')
 
