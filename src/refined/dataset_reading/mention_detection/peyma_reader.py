@@ -12,6 +12,7 @@ from torch.utils.data.dataset import Dataset
 from transformers import AutoTokenizer
 from refined.utilities.general_utils import batch_items
 
+import re
 
 class PeymaNER(Dataset):
     def __init__(
@@ -87,6 +88,11 @@ class PeymaNER(Dataset):
         return batch_elements
 
     def read_files(self):
+        separator = r"\|"
+        begin_sign = "B-"
+        in_sign = "I-"
+        pattern = re.compile(rf'^(.*){separator}({begin_sign}\w+|{in_sign}\w+|O)$')
+        
         with open(self.file_path, "r", encoding="utf-8") as f:
             words, ners = [], []
 
@@ -122,10 +128,11 @@ class PeymaNER(Dataset):
                     continue  # skip the empty line
 
                 # Parse word and ner
-                if "|" in line:
-                    word, ner = line.split("|")
-                    words.append(word.strip())
-                    ners.append(ner.strip())
+                match = pattern.match(line)
+                if match:
+                    word, ner = match.group(1).strip(), match.group(2).strip()
+                    words.append(word)
+                    ners.append(ner)
                 else:
                     # malformed line
                     continue
