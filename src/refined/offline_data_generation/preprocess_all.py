@@ -2,6 +2,14 @@
 # train a new ReFinED ER model from scratch.
 # Data files are written for intermediate steps so work will resume if the script is restarted.
 
+import os
+import requests
+import zipfile
+import glob
+import shutil
+
+
+
 import copy
 import json
 import logging
@@ -272,12 +280,6 @@ def main():
         resource_manager.download_datasets_if_needed()
 
         # Download peyma
-        import os
-        import requests
-        import zipfile
-        import glob
-        import shutil
-
         DATASET_DIR = os.path.join(OUTPUT_PATH, "datasets")
         os.makedirs(DATASET_DIR, exist_ok=True)
         zip_url = "https://drive.google.com/uc?id=1WZxpFRtEs5HZWyWQ2Pyg9CCuIBs1Kmvx&export=download"
