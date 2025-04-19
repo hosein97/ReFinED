@@ -377,23 +377,31 @@ def main():
     else:
         LOG.info('Already relabelled CONLL dataset so skipping')
 
-    # LOG.info('Step 13) Train MD model on augmented MD datasets')
+    LOG.info('Step 13) Train MD model on augmented MD datasets')
     # model_dir_prefix = 'onto-onto-article-onto-lower-onto-article-lower-conll-conll-lower-conll-article-conll-article' \
     #                    '-lower-webqsp-epoch-9'
-    # if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
-    #     datasets = ['onto', 'onto-article', 'onto-lower', 'onto-article-lower',
-    #                 'conll', 'conll-lower', 'conll-article',
-    #                 'conll-article-lower', 'webqsp']
-    #     train_md_model(resources_dir=OUTPUT_PATH, datasets=datasets,
-    #                    device="cuda:0", max_seq=510, batch_size=16, bio_only=False,
-    #                    ner_tag_to_num=NER_TAG_TO_IX,
-    #                    additional_filenames={'conll': '_plus_dates', 'conll-lower': '_plus_dates',
-    #                                          'conll-article': '_plus_dates', 'conll-article-lower': '_plus_dates'},
-    #                    use_mention_tag=True,
-    #                    convert_types={"webqsp": {"DURATION": "TIME", "NUMBER": "CARDINAL"}},
-    #                    filter_types=set())
-    # else:
-    #     LOG.info("Found an MD model already trained on augmented MD datasets, so skipping")
+    model_dir_prefix = 'arman-peyma'
+
+    if len([x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]]) == 0:
+        # datasets = ['onto', 'onto-article', 'onto-lower', 'onto-article-lower',
+        #             'conll', 'conll-lower', 'conll-article',
+        #             'conll-article-lower', 'webqsp']
+        datasets = ['arman', 'peyma']
+
+        train_md_model(resources_dir=OUTPUT_PATH, datasets=datasets, 
+                       transformer_name="HooshvareLab/bert-base-parsbert-uncased",
+                       num_epochs=5,
+                       device="cuda:0", max_seq=510, batch_size=16, bio_only=False,
+                       ner_tag_to_num=NER_TAG_TO_IX,
+                    #    additional_filenames={'conll': '_plus_dates', 'conll-lower': '_plus_dates',
+                    #                          'conll-article': '_plus_dates', 'conll-article-lower': '_plus_dates'},
+                       additional_filenames={'arman': '_plus_dates'},
+                       use_mention_tag=True,
+                    #    convert_types={"webqsp": {"DURATION": "TIME", "NUMBER": "CARDINAL"}},
+                       convert_types={"peyma": {"DAT": "DATE", "PCT": "PERCENT", "TIM":"TIME", "MON": "MONEY"}},
+                       filter_types=set())
+    else:
+        LOG.info("Found an MD model already trained on augmented MD datasets, so skipping")
 
     # LOG.info('Step 14) Running MD model over Wikipedia.')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')):
