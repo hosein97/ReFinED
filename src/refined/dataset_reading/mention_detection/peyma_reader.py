@@ -79,7 +79,7 @@ class PeymaNER(Dataset):
         batch_elements: List[List[Tuple[str, str]]] = []
 
         for line in self.read_files():
-
+            
             words_t, ner_t, _ = tokenize_and_preserve_labels(line["words"], line["ners"], self.tokenizer)
 
             for batch_element in batch_items(zip(words_t, ner_t), n=self.max_seq):
@@ -89,8 +89,8 @@ class PeymaNER(Dataset):
 
     def read_files(self):
         separator = r"\|"
-        begin_sign = "B-"
-        in_sign = "I-"
+        begin_sign = "B_"
+        in_sign = "I_"
         pattern = re.compile(rf'^(.*){separator}({begin_sign}\w+|{in_sign}\w+|O)$')
         
         with open(self.file_path, "r", encoding="utf-8") as f:
