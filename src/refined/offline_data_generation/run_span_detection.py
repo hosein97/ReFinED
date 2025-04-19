@@ -13,6 +13,7 @@ from tqdm.auto import tqdm
 from refined.dataset_reading.mention_detection.conll_reader import CoNLLNER
 from refined.dataset_reading.mention_detection.ontonotes_reader import OntoNotesNER
 from refined.dataset_reading.mention_detection.webqsp_reader import WebQSPNER
+from refined.dataset_reading.mention_detection.arman_reader import ArmanNER
 from refined.inference.standalone_md import MentionDetector
 
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -126,7 +127,8 @@ def add_spans_to_existing_datasets(dataset_names: List[str], dataset_dir: str, m
     name_to_dataset = {
         "onto": OntoNotesNER,
         "conll": CoNLLNER,
-        "webqsp": WebQSPNER
+        "webqsp": WebQSPNER,
+        "arman": ArmanNER
     }
 
     mention_detector = MentionDetector.init_from_pretrained(model_dir=model_dir, device=device)
