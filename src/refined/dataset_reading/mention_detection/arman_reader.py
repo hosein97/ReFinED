@@ -185,6 +185,7 @@ class ArmanNER(Dataset):
 
 
     def read_file_as_sentences(
+        self,
         file_path,
         bio_only=True,
         leave_all_mentions: bool = False
