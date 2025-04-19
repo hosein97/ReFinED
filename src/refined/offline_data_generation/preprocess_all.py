@@ -403,21 +403,21 @@ def main():
     else:
         LOG.info("Found an MD model already trained on augmented MD datasets, so skipping")
 
-    # LOG.info('Step 14) Running MD model over Wikipedia.')
-    # if not os.path.exists(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')):
-    #     model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]
-    #     n_gpu = 1  # can change this to speed it up if more GPUs are available
-    #     run(aligned_wiki_file=os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned.json'),
-    #         n_gpu=n_gpu, resources_dir=OUTPUT_PATH, model_dir=model_dir)
-    #     command = 'cat '
-    #     for part_num in range(n_gpu):
-    #         command += os.path.abspath(
-    #             os.path.join(OUTPUT_PATH, f'wikipedia_links_aligned.json_spans_{part_num}.json '))
-    #     f_out = open(os.path.abspath(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')), 'w')
-    #     process = subprocess.Popen(command.split(), stdout=f_out)
-    #     output, error = process.communicate()
-    #     print(error)
-    #     f_out.close()
+    LOG.info('Step 14) Running MD model over Wikipedia.')
+    if not os.path.exists(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')):
+        model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]
+        n_gpu = 1  # can change this to speed it up if more GPUs are available
+        run(aligned_wiki_file=os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned.json'),
+            n_gpu=n_gpu, resources_dir=OUTPUT_PATH, model_dir=model_dir)
+        command = 'cat '
+        for part_num in range(n_gpu):
+            command += os.path.abspath(
+                os.path.join(OUTPUT_PATH, f'wikipedia_links_aligned.json_spans_{part_num}.json '))
+        f_out = open(os.path.abspath(os.path.join(OUTPUT_PATH, 'wikipedia_links_aligned_spans.json')), 'w')
+        process = subprocess.Popen(command.split(), stdout=f_out)
+        output, error = process.communicate()
+        print(error)
+        f_out.close()
 
     # LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
     # build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
