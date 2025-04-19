@@ -310,6 +310,37 @@ def main():
         os.remove(zip_path)
 
 
+        # Download arman
+        DATASET_DIR = os.path.join(OUTPUT_PATH, "datasets")
+        os.makedirs(DATASET_DIR, exist_ok=True)
+        zip_url = "https://drive.google.com/uc?id=1A9L64D3V-xmVQJBJn1XEisE_66faqlNk&export=download"
+        zip_path = os.path.join(DATASET_DIR, "arman.zip")
+        response = requests.get(zip_url)
+        with open(zip_path, "wb") as f:
+            f.write(response.content)
+
+        extract_dir = os.path.join(DATASET_DIR, "arman_extracted")
+        os.makedirs(extract_dir, exist_ok=True)
+
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(extract_dir)
+
+        extracted_subdir = glob.glob(os.path.join(extract_dir, "*"))[0]  # Assumes one subfolder inside
+        file_map = {
+            "train.txt": "arman_training.txt",
+            "dev.txt": "arman_development.txt",
+            "test.txt": "arman_test.txt",
+        }
+
+        for original_name, new_name in file_map.items():
+            src = os.path.join(extracted_subdir, original_name)
+            dst = os.path.join(DATASET_DIR, new_name)
+            shutil.move(src, dst)
+
+        shutil.rmtree(extract_dir)
+        os.remove(zip_path)
+
+
 
 
         NER_TAG_TO_NUM_MD = copy.deepcopy(NER_TAG_TO_IX)
@@ -318,25 +349,33 @@ def main():
         # train_md_model(resources_dir=OUTPUT_PATH, datasets=['onto', 'onto-article', 'onto-lower'],
         train_md_model(resources_dir=OUTPUT_PATH, datasets=['peyma'], transformer_name="HooshvareLab/bert-base-parsbert-uncased",
                        device='cuda:0', max_seq=500, batch_size=16, bio_only=False, max_articles=None,
-                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=2, filter_types=set(),
+                       ner_tag_to_num=NER_TAG_TO_NUM_MD, num_epochs=5, filter_types=set(),
                        convert_types={"peyma": {"DAT": "DATE", "PCT": "PERCENT", "TIM":"TIME", "MON": "MONEY"}},)
     else:
         LOG.info('Model already trained so skipping')
 
-    # LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
+    LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):
-    #     model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]  # or -1
-    #     add_spans_to_existing_datasets(dataset_names=["conll"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
-    #                                    model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
-    #                                                                                                         "CARDINAL",
-    #                                                                                                         "MONEY",
-    #                                                                                                         "PERCENT",
-    #                                                                                                         "TIME",
-    #                                                                                                         "ORDINAL",
-    #                                                                                                         "QUANTITY"},
-    #                                    device="cuda:0")
-    # else:
-    #     LOG.info('Already relabelled CONLL dataset so skipping')
+    if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "arman_train_plus_dates.txt")):
+        model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]  # or -1
+        # add_spans_to_existing_datasets(dataset_names=["conll"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
+        #                                model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
+        #                                                                                                     "CARDINAL",
+        #                                                                                                     "MONEY",
+        #                                                                                                     "PERCENT",
+        #                                                                                                     "TIME",
+        #                                                                                                     "ORDINAL",
+        #                                                                                                     "QUANTITY"},
+        #                                device="cuda:0")
+        add_spans_to_existing_datasets(dataset_names=["arman"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
+                                       model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
+                                                                                                            "PERCENT",
+                                                                                                            "TIME",
+                                                                                                            "MONEY",},
+                                       device="cuda:0")
+
+    else:
+        LOG.info('Already relabelled CONLL dataset so skipping')
 
     # LOG.info('Step 13) Train MD model on augmented MD datasets')
     # model_dir_prefix = 'onto-onto-article-onto-lower-onto-article-lower-conll-conll-lower-conll-article-conll-article' \
