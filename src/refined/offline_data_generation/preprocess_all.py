@@ -356,7 +356,7 @@ def main():
 
     LOG.info('Step 12) Relabelling CONLL dataset using numeric/date MD model')
     # if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "conll_train_plus_dates.txt")):
-    if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "arman_train_plus_dates.txt")):
+    if not os.path.exists(os.path.join(OUTPUT_PATH, "datasets", "arman_training_plus_dates.txt")):
         model_dir = [x[0] for x in list(os.walk(OUTPUT_PATH)) if model_dir_prefix in x[0]][0]  # or -1
         # add_spans_to_existing_datasets(dataset_names=["conll"], dataset_dir=os.path.join(OUTPUT_PATH, "datasets"),
         #                                model_dir=model_dir, file_extension="_plus_dates", ner_types_to_add={"DATE",
