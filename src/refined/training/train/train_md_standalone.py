@@ -18,6 +18,7 @@ from transformers import (
 )
 
 from refined.dataset_reading.mention_detection.peyma_reader import PeymaNER
+from refined.dataset_reading.mention_detection.arman_reader import ArmanNER
 from refined.dataset_reading.mention_detection.conll_reader import CoNLLNER
 from refined.utilities.md_dataset_utils import (
     bio_to_offset_pairs,
@@ -71,6 +72,7 @@ def train_md_model(
     datasets = list(map(str.lower, datasets))
     name_to_dataset = {
         "peyma": PeymaNER,
+        "arman": ArmanNER
         # "onto": OntoNotesNER,
         # "conll": CoNLLNER,
         # "webqsp": WebQSPNER,
