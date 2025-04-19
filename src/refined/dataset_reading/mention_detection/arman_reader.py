@@ -247,7 +247,7 @@ class ArmanNER(Dataset):
                                            leave_all_mentions=True)):
 
                 # Relabel the doc using the trained NER model
-                new_sent = self.relabel_sent(doc=sent, mention_detector=mention_detector,
+                new_sent = self.relabel_sent(sent=sent, mention_detector=mention_detector,
                                            ner_types_to_add=ner_types_to_add)
 
 
