@@ -419,19 +419,19 @@ def main():
         print(error)
         f_out.close()
 
-    # LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
-    # build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
+    LOG.info('Step 15) Building LMDB dictionaries and storing files in the expected file structures.')
+    build_lmdb_dicts(preprocess_all_data_dir=OUTPUT_PATH, keep_all_entities=keep_all_entities)
 
-    # LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
-    #          "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
-    # LOG.info(f"The data_dir is the relative path: {OUTPUT_PATH}/organised_data_dir.")
-    # LOG.info(f"You can train a model with the new data using `train.py --download_files n "
-    #          f"--data_dir {OUTPUT_PATH}/organised_data_dir` . Ensure --download_files n to avoid overwriting.")
-    # LOG.info(f"You can use an existing model with the updated data files (e.g. includes recently added entities) "
-    #          f"without retraining the model (zero-shot entities) by replacing the data files stored in an existing "
-    #          f"data_dir. Note that qcode_to_class_tns will need to be renamed in the resource_constants file "
-    #          f"and download should be se to False to avoid downloading a different file.")
-    # LOG.info("Done.")
+    LOG.info("The preprocess_all.py script is done. You can now use the newly generated/updated data files "
+             "for your trained model or train a model from scratch on the newly generated Wikipedia dataset.")
+    LOG.info(f"The data_dir is the relative path: {OUTPUT_PATH}/organised_data_dir.")
+    LOG.info(f"You can train a model with the new data using `train.py --download_files n "
+             f"--data_dir {OUTPUT_PATH}/organised_data_dir` . Ensure --download_files n to avoid overwriting.")
+    LOG.info(f"You can use an existing model with the updated data files (e.g. includes recently added entities) "
+             f"without retraining the model (zero-shot entities) by replacing the data files stored in an existing "
+             f"data_dir. Note that qcode_to_class_tns will need to be renamed in the resource_constants file "
+             f"and download should be se to False to avoid downloading a different file.")
+    LOG.info("Done.")
 
     
     # example_usage = """
