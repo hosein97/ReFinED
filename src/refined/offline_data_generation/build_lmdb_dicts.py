@@ -74,8 +74,8 @@ def build_lmdb_dicts(preprocess_all_data_dir: str, keep_all_entities: bool):
     # additional_data_files
     redirects = load_redirects(os.path.join(preprocess_all_data_dir, "redirects.json"))
     LmdbImmutableDict.from_dict(redirects, output_file_path=additional_data_files["redirects"])
-    shutil.copy(os.path.join(preprocess_all_data_dir, "disambiguation_qcodes.txt"),
-                additional_data_files["disambiguation_qcodes"])
+    # shutil.copy(os.path.join(preprocess_all_data_dir, "disambiguation_qcodes.txt"),
+    #             additional_data_files["disambiguation_qcodes"])
     wiki_to_qcode = load_wikipedia_to_qcode(os.path.join(preprocess_all_data_dir, 'enwiki.json'))
     LmdbImmutableDict.from_dict(wiki_to_qcode, output_file_path=additional_data_files["wiki_to_qcode"])
     qcode_to_label = load_labels(os.path.join(preprocess_all_data_dir, 'qcode_to_label.json'))
