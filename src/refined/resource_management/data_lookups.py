@@ -13,6 +13,23 @@ from refined.resource_management.lmdb_wrapper import LmdbImmutableDict
 from refined.resource_management.loaders import load_human_qcode
 import os
 
+import re
+
+class PersianSentenceSplitter:
+    def __init__(self):
+        # Matches punctuation followed by a space (or newline) — adjusts for Persian.
+        self.pattern = re.compile(r'(?<=[\.\!\؟\!])\s+')
+
+    def span_tokenize(self, text: str):
+        spans = []
+        start = 0
+        for match in self.pattern.finditer(text):
+            end = match.end()
+            spans.append((start, match.start()))
+            start = end
+        spans.append((start, len(text)))
+        return spans
+
 
 class LookupsInferenceOnly: 
 
@@ -73,9 +90,14 @@ class LookupsInferenceOnly:
         else:
             self.qcode_to_wiki = None
 
-        with open(resource_to_file_path["nltk_sentence_splitter_english"], 'rb') as f:
-            self.nltk_sentence_splitter_english: PunktSentenceTokenizer = pickle.load(f)
- 
+        # with open(resource_to_file_path["nltk_sentence_splitter_english"], 'rb') as f:
+        #     self.nltk_sentence_splitter_english: PunktSentenceTokenizer = pickle.load(f)
+
+        self.nltk_sentence_splitter_english = PersianSentenceSplitter()
+
+
+
+
         # can be shared
         # self.tokenizers: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
         #     os.path.dirname(resource_to_file_path["roberta_base_model"]),
