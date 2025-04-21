@@ -63,8 +63,8 @@ DATA_FILES_WIKIDATA = {
     },
     "qcode_idx_to_class_idx": {
         "s3_bucket": s3_resource_bucket,
-        "s3_key": s3_resource_prefix + "wikidata_data/qcode_to_class_tns_1869716-200.np",
-        "local_filename": "wikidata_data/qcode_to_class_tns_1869716-200.np",  # TODO remove hard-coding size
+        "s3_key": s3_resource_prefix + "wikidata_data/qcode_to_class_tns_1869716-74.np",
+        "local_filename": "wikidata_data/qcode_to_class_tns_1869716-74.np",  # TODO remove hard-coding size
         "needed_for_inference": True
     },
     # example change made for preprocess_all.py script
