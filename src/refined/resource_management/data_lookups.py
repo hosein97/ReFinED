@@ -75,21 +75,39 @@ class LookupsInferenceOnly:
 
         with open(resource_to_file_path["nltk_sentence_splitter_english"], 'rb') as f:
             self.nltk_sentence_splitter_english: PunktSentenceTokenizer = pickle.load(f)
-
+ 
         # can be shared
+        # self.tokenizers: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
+        #     os.path.dirname(resource_to_file_path["roberta_base_model"]),
+        #     # add_special_tokens=False,
+        #     add_prefix_space=False,
+        #     use_fast=True,
+        # )
+
+
         self.tokenizers: PreTrainedTokenizer = AutoTokenizer.from_pretrained(
-            os.path.dirname(resource_to_file_path["roberta_base_model"]),
-            # add_special_tokens=False,
+            "HooshvareLab/bert-base-parsbert-uncased",
             add_prefix_space=False,
             use_fast=True,
         )
 
+
+        # self.transformer_model_config = AutoConfig.from_pretrained(
+        #     os.path.dirname(resource_to_file_path["roberta_base_model"])
+        # )
+
+
         self.transformer_model_config = AutoConfig.from_pretrained(
-            os.path.dirname(resource_to_file_path["roberta_base_model"])
+            "HooshvareLab/bert-base-parsbert-uncased"
         )
+
 
     def get_transformer_model(self) -> PreTrainedModel:
         # cannot be shared so create a copy
+        # return AutoModel.from_pretrained(
+        #     os.path.dirname(self.resource_to_file_path["roberta_base_model"])
+        # )
+
         return AutoModel.from_pretrained(
-            os.path.dirname(self.resource_to_file_path["roberta_base_model"])
+            "HooshvareLab/bert-base-parsbert-uncased"
         )
