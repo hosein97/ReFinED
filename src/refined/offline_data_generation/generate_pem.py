@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from collections import defaultdict
-from typing import Dict, Set, Iterator, Tuple, List, Optional
+from typing import Mapping, Dict, Set, Iterator, Tuple, List, Optional
 
 import ujson as json
 from tqdm.auto import tqdm
@@ -157,14 +157,32 @@ def build_pem_lookup(aligned_wiki_file: str, output_dir: str, resources_dir: str
 
     # TODO add Wikidata labels and Wikidata alias, and crosswikis to includes tables/list links in link counts
     # consider taking/storing top 30 only
-    pem: Dict[str, Dict[str, float]] = defaultdict(dict)
-    for surface_form, qcode_link_counts in tqdm(surface_form_to_link_counts.items(), desc='Writing file'):
-        total_link_count = sum(link_count for qcode, link_count in qcode_link_counts.items())
-        pem[surface_form] = dict(sorted([(qcode, link_count / total_link_count) for qcode, link_count in
-                                         qcode_link_counts.items()], key=lambda x: x[1], reverse=True))
+    # pem: Dict[str, Dict[str, float]] = defaultdict(dict)
+    # for surface_form, qcode_link_counts in tqdm(surface_form_to_link_counts.items(), desc='Writing file'):
+    #     total_link_count = sum(link_count for qcode, link_count in qcode_link_counts.items())
+    #     pem[surface_form] = dict(sorted([(qcode, link_count / total_link_count) for qcode, link_count in
+    #                                      qcode_link_counts.items()], key=lambda x: x[1], reverse=True))
 
+    # with open(f'{output_dir}/wiki_pem.json.part', 'w') as output_file:
+    #     for surface_form, qcode_probs in tqdm(pem.items()):
+    #         output_file.write(json.dumps({'surface_form': surface_form, 'qcode_probs': qcode_probs}) + '\n')
+
+
+    # New PEM type: surface_form -> List of (qcode, probability)
+    pem: Mapping[str, List[Tuple[str, float]]] = {}
+
+    for surface_form, qcode_link_counts in tqdm(surface_form_to_link_counts.items(), desc='Writing file'):
+        total_link_count = sum(qcode_link_counts.values())
+        qcode_probs = sorted(
+            [(qcode, link_count / total_link_count) for qcode, link_count in qcode_link_counts.items()],
+            key=lambda x: x[1],
+            reverse=True
+        )
+        pem[surface_form] = qcode_probs
+
+    # Writing to file
     with open(f'{output_dir}/wiki_pem.json.part', 'w') as output_file:
         for surface_form, qcode_probs in tqdm(pem.items()):
-            output_file.write(json.dumps({'surface_form': surface_form, 'qcode_probs': qcode_probs}) + '\n')
+            output_file.write(json.dumps({'surface_form': surface_form, 'qcode_probs': qcode_probs}, ensure_ascii=False) + '\n')
 
     os.rename(f'{output_dir}/wiki_pem.json.part', f'{output_dir}/wiki_pem.json')
