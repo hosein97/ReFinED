@@ -110,7 +110,7 @@ class ResourceManager:
     def get_data_files_info(self) -> Dict[str, Dict[str, str]]:
         entity_set_to_files: Dict[str, Dict[str, Dict[str, str]]] = {
             "wikidata": DATA_FILES_WIKIDATA,
-            "wikipedia": DATA_FILES_WIKIPEDIA
+            "wikipedia": DATA_FILES_WIKIPEDIA 
         }
 
         assert self.entity_set in entity_set_to_files, f"entity_set should be one of" \

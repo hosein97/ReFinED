@@ -217,7 +217,7 @@ class PreprocessorInferenceOnly(Preprocessor):
         if len(text) == 0:
             return []
         try:
-            token_res = self.tokenizer.encode_plus(
+            token_res = self.tokenizer.encode_plus( 
                 text,
                 return_offsets_mapping=True,
                 return_token_type_ids=False,
